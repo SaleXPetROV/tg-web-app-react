@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./Form.css";
 import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import { useTelegram } from "../../hooks/useTelegram";
@@ -9,6 +9,23 @@ const Form = () => {
     const [street, setStreet] = useState('');
     const [subject, setSubject] = useState('physical');
     const {tg} = useTelegram();
+
+    const onSendData = useCallback(() => {
+        const data = {
+            country,
+            street,
+            subject
+        }
+        tg.sendData(JSON.stringify(data));
+    }, [])
+
+    useEffect(() => {
+        tg.onEvent('mainButtonClicked', onSendData)
+        
+        return () => {
+            tg.offEvent('mainButtonClicked', onSendData)
+        }
+    }, [])
 
     useEffect(() => {
         tg.MainButton.setParams({
@@ -42,7 +59,7 @@ const Form = () => {
     <input 
         className={"input"} 
         type="text" 
-        placeholder={"Country"}
+        placeholder={"Country/Страна"}
         value={country}
         onChange={onChangeCountry} 
     />
@@ -50,7 +67,7 @@ const Form = () => {
     <input 
         className={"input"} 
         type="text" 
-        placeholder={"Street"} 
+        placeholder={"Street/Город"} 
         value={street}
         onChange={onChangeStreet}
     />
