@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./Form.css";
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import { useTelegram } from "../../hooks/useTelegram";
 
 const Form = () => {
